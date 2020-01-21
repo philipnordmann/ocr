@@ -12,7 +12,7 @@ while [ 1 ]; do
 
     cd workspace
 
-    last_changed=$($gdrives list --query "name contains 'last_changed.info'" | grep last_changed.info)
+    last_changed=$($gdrives list --name-width 0 --query "name contains 'last_changed.info'" | grep last_changed.info)
     last_changed_id=$(echo ${last_changed} | awk '{print $1}')
     last_changed_name=$(readlink -f $(echo ${last_changed} | awk '{print $2}'))
 
@@ -25,8 +25,8 @@ while [ 1 ]; do
     $gdrives update ${last_changed_id} ${last_changed_name}
 
     echo "getting files"
-    inbox_id=$($gdrives list --query "name contains '_inbox'" | grep inbox | awk '{print $1}')
-    files=$($gdrives list --query "'${inbox_id}' in parents and createdTime > '${last_changed_date}' and name contains 'pdf'" | tail -n+2)
+    inbox_id=$($gdrives list --name-width 0 --query "name contains '_inbox'" | grep inbox | awk '{print $1}')
+    files=$($gdrives list --name-width 0 --query "'${inbox_id}' in parents and createdTime > '${last_changed_date}' and name contains 'pdf'" | tail -n+2)
 
     if [ "$files" != "" ]; then
         while IFS= read -r line; do
